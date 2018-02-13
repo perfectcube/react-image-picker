@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should accept a default image picked 1`] = `
+<div
+  className="image_picker"
+>
+  <div
+    className="responsive selected"
+    onClick={[Function]}
+  >
+    <img
+      className="thumbnail selected"
+      src="test-file-stub0"
+      style={
+        Object {
+          "height": 150,
+          "objectFit": "cover",
+          "width": 150,
+        }
+      }
+    />
+    <div
+      className="checked"
+    >
+      <div
+        className="icon"
+      />
+    </div>
+  </div>
+  <div
+    className="responsive"
+    onClick={[Function]}
+  >
+    <img
+      className="thumbnail"
+      src="test-file-stub1"
+      style={
+        Object {
+          "height": 150,
+          "objectFit": "cover",
+          "width": 150,
+        }
+      }
+    />
+    <div
+      className="checked"
+    >
+      <div
+        className="icon"
+      />
+    </div>
+  </div>
+  <div
+    className="responsive"
+    onClick={[Function]}
+  >
+    <img
+      className="thumbnail"
+      src="test-file-stub2"
+      style={
+        Object {
+          "height": 150,
+          "objectFit": "cover",
+          "width": 150,
+        }
+      }
+    />
+    <div
+      className="checked"
+    >
+      <div
+        className="icon"
+      />
+    </div>
+  </div>
+  <div
+    className="responsive"
+    onClick={[Function]}
+  >
+    <img
+      className="thumbnail"
+      src="test-file-stub3"
+      style={
+        Object {
+          "height": 150,
+          "objectFit": "cover",
+          "width": 150,
+        }
+      }
+    />
+    <div
+      className="checked"
+    >
+      <div
+        className="icon"
+      />
+    </div>
+  </div>
+  <div
+    className="clear"
+  />
+</div>
+`;

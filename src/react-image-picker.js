@@ -1,62 +1,73 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Map } from 'immutable'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Map } from 'immutable';
 
-import './index.scss'
-import Image from './components/image'
+import './index.scss';
+import Image from './components/image';
 
 class ImagePicker extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      picked: Map()
+    constructor(props) {
+        super(props)
+        this.state = {
+            picked: this.props.picked
+        }
+        this.handleImageClick = this.handleImageClick.bind(this)
+        this.renderImage = this.renderImage.bind(this)
     }
-    this.handleImageClick = this.handleImageClick.bind(this)
-    this.renderImage = this.renderImage.bind(this)
-  }
 
-  handleImageClick(image) {
-    const { multiple, onPick } = this.props
-    const pickedImage = multiple ? this.state.picked : Map()
-    const newerPickedImage = 
-      pickedImage.has(image.value) ? 
-        pickedImage.delete(image.value) : 
-          pickedImage.set(image.value, image.src)
-          
-    this.setState({picked: newerPickedImage})
+    componentWillReceiveProps(nextProps) {
+        if(this.props.picked !== nextProps.picked) {
+            this.setState({picked: nextProps.picked});
+        }
+    }
 
-    const pickedImageToArray = []
-    newerPickedImage.map((image, i) => pickedImageToArray.push({src: image, value: i}))
-    
-    onPick(multiple ? pickedImageToArray : pickedImageToArray[0])
-  }
+    handleImageClick(image) {
+        const { multiple, onPick } = this.props
+        const pickedImage = multiple ? this.state.picked : Map()
+        const newerPickedImage =
+            pickedImage.has(image.value) ?
+                pickedImage.delete(image.value) :
+                pickedImage.set(image.value, image.src)
 
-  renderImage(image, i) {
-    return (
-      <Image 
-        src={image.src}
-        isSelected={this.state.picked.has(image.value)} 
-        onImageClick={() => this.handleImageClick(image)} 
-        key={i}
-      />
-    )
-  }
+        this.setState({picked: newerPickedImage})
 
-  render() {
-    const { images } = this.props
-    return (
-      <div className="image_picker">
-        { images.map(this.renderImage) }
-        <div className="clear"/>
-      </div>
-    )
-  }
+        const pickedImageToArray = []
+        newerPickedImage.map((image, i) => pickedImageToArray.push({src: image, value: i}))
+
+        onPick(multiple ? pickedImageToArray : pickedImageToArray[0])
+    }
+
+    renderImage(image, i) {
+        return (
+            <Image
+                src={image.src}
+                isSelected={this.state.picked.has(image.value)}
+                onImageClick={() => this.handleImageClick(image)}
+                key={i}
+            />
+        )
+    }
+
+    render() {
+        const { images } = this.props
+        return (
+            <div className="image_picker">
+                { images.map(this.renderImage) }
+                <div className="clear"/>
+            </div>
+        )
+    }
+}
+
+ImagePicker.defaultProps = {
+    picked: Map()
 }
 
 ImagePicker.propTypes = {
-  images: PropTypes.array,
-  multiple: PropTypes.bool,
-  onPick: PropTypes.func
+    images: PropTypes.array,
+    multiple: PropTypes.bool,
+    onPick: PropTypes.func,
+    picked: PropTypes.object
 }
 
 export default ImagePicker
