@@ -141,34 +141,36 @@ class ImagePicker extends Component {
 
 ImagePicker.defaultProps = {
   // Picked is passed in as an array of image paths. Internally we store this in an immutable Map()
-  picked: [], 
+  picked: [],
   // By default, don't bother sniffing the indexes of the pre-selected items in picked from the images array
   sniffPicked: false,
   // By default we'll multiselect
   multiple: true,
-  // By default we don't pass you back the images selected. Define a callback that takes a single argument, 
+  // By default we don't pass you back the images selected. Define a callback that takes a single argument,
   // which is an array of the picked images, if you want to get a list of what's been picked so far.
   onPick: null,
 }
 
 ImagePicker.propTypes = {
-  // An array of images that you want to pick from. Each array member has this shape: {src: 'some src', index: some_index}. 
+  // An array of images that you want to pick from. Each array member has this shape: {src: 'some src', index: some_index}.
   // To get this array do this: <ImagePicker images={yourImageArray.map((image, index) => ({src: image, index: index}))}
   images: PropTypes.array.isRequired,
-  // A bool, Can you select multiple images? 
+  // A bool, Can you select multiple images?
   multiple: PropTypes.bool,
-  // A function that we call when you pick an image. You're passed back 
+  // A function that we call when you pick an image. You're passed back
   // an array of the images that the image picker has chosen so far
   onPick: PropTypes.func,
-  // An array of paths that are pre-chosen. If you pass in an array of objects, each with this shape: {src: 'some src', index: some_index}
-  // then we'll persist the index where the chosen item was in the original collection. If you pass in a plain array of 
-  // source paths then we'll pass you back -1 for the indexes on items that we don't know where they came from, even if we 
+  // An array of paths that are pre-chosen. If you pass in an array of objects, each with this
+  // shape: {src: 'some src', index: some_index}, then we'll persist the index where the chosen
+  // item was in the original collection. If you pass in a plain array of source paths then we'll
+  // pass you back -1 for the indexes on items that we don't know where they came from, even if we
   // are tracking that were selected
   picked: PropTypes.array,
-  // If you want to sniff for the index of the picked items, because you don't want to pass in an array of objects for picked that is 
-  // shaped like [{src: 'some src', index: some_index},{src: 'some src', index: some_index}] then we can sniff the selected indexes
-  // for you. This is super useful if the indexes change in search results but you still want to select the same images in the refined
-  // search results. Set this to true if you want to get back the indexes of each item that we select. 
+  // If you want to sniff for the index of the picked items, because you don't want to pass in an
+  // array of objects for picked that is shaped like [{src: 'some src', index: some_index},{src: 'some src', index: some_index}]
+  // then we can sniff the selected indexes for you. This is super useful if the indexes change in
+  // search results but you still want to select the same images in the refined
+  // search results. Set this to true if you want to get back the indexes of each item that we select.
   // This defaults to false meaning we'll pass you back a -1 for the index of the picked items.
   sniffPicked: PropTypes.bool,
 }
