@@ -81,7 +81,8 @@ class ImagePicker extends Component {
       // get the multiple and picked callback out of props
       const { multiple, onPick } = this.props;
       // if onPick was defined as a function then transcode our Map into an array and send it back to the caller
-      if (typeof onPick === 'function') {
+      const valid_callback = (typeof onPick === 'function');
+      if (valid_callback) {
         // collect an array version of what we have in state
         const collection = [];
         data.forEach((index,src) => {
