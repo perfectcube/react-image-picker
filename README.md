@@ -106,11 +106,11 @@ ImagePicker.propTypes = {
   multiple: PropTypes.bool,
   // A function that we call when you pick an image. You're passed back:
   //  • an array of the images that the image picker has chosen so far as the first argument
-  //  • the image that you clicked on as an object with the following shape:
+  //  • the image that you clicked on as an object with the following shape as the second argument:
   //       src: the image path
   //       index: the position withing props.images where your image exists
   //              ... unless you're using picked && sniffPicked = false then you get -1
-  //  • a boolean letting you know if the last click removed an image from the list
+  //  • a boolean letting you know if the last click removed an image from the list as the third argument
   onPick: PropTypes.func,
   // An array of paths that are pre-chosen. If you pass in an array of objects, each with this
   // shape: {src: 'some src', index: some_index}, then we'll persist the index where the chosen
