@@ -1,6 +1,6 @@
 {
   "name": "react-image-picker",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Picks images from gallery",
   "main": "src/react-image-picker.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "build-lib": "webpack --config webpack.lib.js",
     "test": "jest"
   },
-  "author": "In Sin <insin_lie93@yahoo.com>",
+  "author": "In Sin <insin_lie93@yahoo.com>, Dan Bryant <dan@perfectcu.be>",
   "license": "MIT",
   "peerDependencies": {
     "react": "^0.14.0 || ^16.1.1",
