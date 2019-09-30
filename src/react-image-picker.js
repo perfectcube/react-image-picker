@@ -5,6 +5,11 @@ import { Map } from 'immutable';
 import './index.scss';
 import Image from './components/image';
 
+/**
+ * Processes props from constructor() to figure out which images need to be preselected in the initial render
+ * @param {object} props the props that are passed to the constructor
+ * @returns {Map} the initial state of state.picked
+ */
 const getPicked = (props) => {
   // our picked values are always put into a map in state.
   let chosen = new Map();
