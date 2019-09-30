@@ -11,8 +11,10 @@ The image picker is used for selecting single or multiple images from gallery.
 ## Features
 - jQuery Free
 - Single or multiple images selection
+
+## Roadmap
 - Styling (...in progress)
-- ...
+- Add video support for paths that end in a supported video extension; .mp4 only for now. General idea is to show a play button that allow previewing the video then selection of the video from the video player.
 
 ## Installation
 ~~npm install react-image-picker~~
