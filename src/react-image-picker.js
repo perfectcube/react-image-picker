@@ -99,7 +99,7 @@ class ImagePicker extends Component {
       // get the multiple and picked callback out of props
       const { multiple } = this.props;
       // use a clean map if we're not in multiple mode
-      const pickedImage = multiple ? this.state.picked : new Map();
+      const pickedImage = (multiple) ? this.state.picked : new Map();
       // we have images selected if the clicked image src exists in our Map
       const have_selection =  pickedImage.has(image.src);
       // get the new state for our selected items
@@ -153,11 +153,14 @@ ImagePicker.defaultProps = {
 }
 
 ImagePicker.propTypes = {
+  
   // An array of images that you want to pick from. Each array member has this shape: {src: 'some src', index: some_index}.
   // To get this array do this: <ImagePicker images={yourImageArray.map((image, index) => ({src: image, index: index}))}
   images: PropTypes.array.isRequired,
+  
   // A bool, Can you select multiple images?
   multiple: PropTypes.bool,
+  
   // A function that we call when you pick an image. You're passed back:
   //  • an array of the images that the image picker has chosen so far as the first argument
   //  • the image that you clicked on as an object with the following shape:
@@ -166,12 +169,14 @@ ImagePicker.propTypes = {
   //              ... unless you're using picked && sniffPicked = false then you get -1
   //  • a boolean letting you know if the last click removed an image from the list
   onPick: PropTypes.func,
+  
   // An array of paths that are pre-chosen. If you pass in an array of objects, each with this
   // shape: {src: 'some src', index: some_index}, then we'll persist the index where the chosen
   // item was in the original collection. If you pass in a plain array of source paths then we'll
   // pass you back -1 for the indexes on items that we don't know where they came from, even if we
   // are tracking that were selected
   picked: PropTypes.array,
+
   // If you want to sniff for the index of the picked items, because you don't want to pass in an
   // array of objects for picked that is shaped like [{src: 'some src', index: some_index},{src: 'some src', index: some_index}]
   // then we can sniff the selected indexes for you. This is super useful if the indexes change in
