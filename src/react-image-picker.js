@@ -49,6 +49,7 @@ const getPicked = (props) => {
 }
 
 class ImagePicker extends Component {
+
     constructor(props) {
       super(props)
 
@@ -64,6 +65,7 @@ class ImagePicker extends Component {
       this.renderImage = this.renderImage.bind(this)
     }
 
+    // FIXME: method is deprecated: https://reactjs.org/docs/react-component.html#unsafe_componentwillreceiveprops
     componentWillReceiveProps(nextProps) {
       if(this.props.picked !== nextProps.picked) {
         this.setState({picked: nextProps.picked});
@@ -77,9 +79,23 @@ class ImagePicker extends Component {
       return altered;
     }
 
+    /**
+     * Calls props.onPick if it's a valid function after transforming state.picked into an array of image objects where an 
+     * image object is {src:"path to image",index:n} and n is the position of the image within your image collection you passed 
+     * in through props.images
+     * @param {Map} data the Map storing our selected images
+     * @param {object} image an object with the following shape:
+     *                       @src {string} the path to the image
+     *                       @index {int} the position of the image within your set of selectable images
+     * @param {bool} removed true of the {image} was removed from our Map
+     * @returns {call} calls props.onPick if its a valid function, sending the following arguments:
+     *                 @collection {array} an array of image objects
+     *                 @image {object}
+     *                 @removed {bool}
+     */
     onData(data,image,removed){
       // get the multiple and picked callback out of props
-      const { multiple, onPick } = this.props;
+      const { onPick } = this.props;
       // if onPick was defined as a function then transcode our Map into an array and send it back to the caller
       const valid_callback = (typeof onPick === 'function');
       if (valid_callback) {
@@ -88,36 +104,79 @@ class ImagePicker extends Component {
         data.forEach((index,src) => {
           collection.push({src: src, index: index});
         });
-        // decide what to send back based on if we're in multiple mode or single mode
-        const send = (multiple) ? collection : collection[0];
         // if onPick is a function then send back an array of the selected images in our Map
-        onPick(send,image,removed);
+        onPick(collection,image,removed);
       }
     }
 
+    /**
+     * Manage component state for the last clicked image
+     * @param {object} image an object with the following shape:
+     *                       @src {string} the path to the image
+     *                       @index {int} the position of the image within your set of selectable images
+     */
     handleImageClick(image) {
       // get the multiple and picked callback out of props
       const { multiple } = this.props;
+      let removed = null;
+      // by default we send back the image that was clicked on. if an image is removed
+      // because !props.multiple mode then the image that was removed is sent back
+      let send = image;
       // use a clean map if we're not in multiple mode
-      const pickedImage = (multiple) ? this.state.picked : new Map();
-      // we have images selected if the clicked image src exists in our Map
-      const have_selection =  pickedImage.has(image.src);
+      // const picked = (multiple) ? this.state.picked : new Map();
+      const picked = this.state.picked;
+      // if the clicked image src exists in our Map then remove it, otherwise add it
+      let remove = picked.has(image.src);
       // get the new state for our selected items
-      const newerPickedImage = (have_selection) ?
+      let selected = (remove) ?
         // if the image is already set then remove it from the collection
-        this.removeSelection(pickedImage,image.src) :
-        // otherwise add it to the collection with the source in both the key and the value
+        this.removeSelection(picked,image.src) :
+        // otherwise add it to the collection with the source as the key
         // we don't use index position, stored in image.value, internally
-        pickedImage.set(image.src,image.index);
+        picked.set(image.src,image.index);
+ 
+      // we're not allowing multiple images &&
+      // an already selected image wasn't removed
+      if (!multiple && !remove) {
+        // get items that will be removed. these are items that don't match the last
+        // item clicked on. 
+        removed = selected.filter((index,src) => {
+          return (src !== image.src);
+        });
+
+        // did we find an item to remove?
+        if (removed.size !== 0) { 
+          // because we're in multiple mode, an image is getting removed even though 
+          // we didn't originally have this image in the list
+          remove = true; 
+          // turn the item to remove into an object hta matches our callback spec; {src:index}
+          const packed = [];
+          // send back the removed image instead of the selected image
+          removed.forEach((index,src) => {
+            packed.push({src:src,index:index});
+          });
+          // send back the first (and only) item in the list of packed entries
+          send = packed[0];
+        }
+
+        // get all items that we'll keep. this will be only the last selected image
+        // NOTE: we don't use index but it has to be in the filter call if we're going to filter off the maps key
+        selected = selected.filter((index,src) => {
+          return (src === image.src);
+        });
+      }
+
       // push the collection back into state
-      this.setState({picked: newerPickedImage});
-      // send back data to the caller if we need to
-      this.onData(newerPickedImage,image,have_selection);
+      this.setState({picked: selected},()=>{
+        // now that state is set, send back data to the caller.
+        this.onData(selected,send,remove);
+      });
     }
 
     renderImage(image, i) {
+      const {picked} = this.state;
       // does our map of selected images have this image in it? if so then set this image as selected 
-      const selected = (this.state.picked.has(image.src)) ? true : false;
+      const selected = picked.has(image.src);
       return (
         <Image
           src={image.src}
@@ -149,9 +208,8 @@ ImagePicker.defaultProps = {
 
   // By default we'll multiselect
   multiple: true,
-  
-  // By default we don't pass you back the images selected. Define a callback that takes a single argument,
-  // which is an array of the picked images, if you want to get a list of what's been picked so far.
+
+  // By default we don't pass you back the images selected. Define a callback if you want to get a list of what's been picked so far.
   onPick: null,
 }
 
@@ -165,12 +223,14 @@ ImagePicker.propTypes = {
   multiple: PropTypes.bool,
   
   // A function that we call when you pick an image. You're passed back:
-  //  • an array of the images that the image picker has chosen so far as the first argument
-  //  • the image that you clicked on as an object with the following shape:
+  //  • as the first argument, an array of the images that the image picker has chosen so far
+  //  • as the second argument, an object with the following shape:
   //       src: the image path 
   //       index: the position withing props.images where your image exists 
   //              ... unless you're using picked && sniffPicked = false then you get -1
-  //  • a boolean letting you know if the last click removed an image from the list
+  //    if !props.multiple then this is the last image removed from the list
+  //    else this is the last image that you clicked on
+  //  • as the third argument, a boolean letting you know if second argument was removed from the list
   onPick: PropTypes.func,
   
   // An array of paths that are pre-chosen. If you pass in an array of objects, each with this
