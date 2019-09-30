@@ -143,10 +143,13 @@ class ImagePicker extends Component {
 ImagePicker.defaultProps = {
   // Picked is passed in as an array of image paths. Internally we store this in an immutable Map()
   picked: [],
+
   // By default, don't bother sniffing the indexes of the pre-selected items in picked from the images array
   sniffPicked: false,
+
   // By default we'll multiselect
   multiple: true,
+  
   // By default we don't pass you back the images selected. Define a callback that takes a single argument,
   // which is an array of the picked images, if you want to get a list of what's been picked so far.
   onPick: null,
