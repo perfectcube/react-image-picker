@@ -92,11 +92,11 @@ class ImagePicker extends Component {
      * @param {object} image an object with the following shape:
      *                       @src {string} the path to the image
      *                       @index {int} the position of the image within your set of selectable images
-     * @param {bool} removed true of the {image} was removed from our Map
+     * @param { bool } removed true of the {image} was removed from our Map
      * @returns {call} calls props.onPick if its a valid function, sending the following arguments:
      *                 @collection {array} an array of image objects
      *                 @image {object}
-     *                 @removed {bool}
+     *                 @removed { bool }
      */
     onData(data,image,removed){
       // get the multiple and picked callback out of props
